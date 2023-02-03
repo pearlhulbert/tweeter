@@ -4,34 +4,33 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
-import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class GetFeedPresenter {
-
+public class GetFollowersPresenter {
     private static final int PAGE_SIZE = 10;
 
     public interface View {
         void setLoadingFooter(boolean value);
         void displayErrorMessage(String message);
-        void addMoreItems(List<Status> statuses);
+        void addMoreItems(List<User> followees);
         void startActivity(User user);
     }
 
-    private StatusService statusService;
+    private FollowService followService;
     private UserService userService;
 
-    private GetFeedPresenter.View view;
+    private View view;
 
-    private Status lastStatus;
+    private User lastFollowee;
 
     private boolean hasMorePages;
     private boolean isLoading = false;
 
-    public GetFeedPresenter(GetFeedPresenter.View view) {
+    public GetFollowersPresenter(View view) {
         this.view = view;
-        statusService = new StatusService();
+        followService = new FollowService();
         userService = new UserService();
     }
 
@@ -39,16 +38,16 @@ public class GetFeedPresenter {
         if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
             isLoading = true;
             view.setLoadingFooter(isLoading);
-            statusService.loadMoreFeedItems(user, PAGE_SIZE, lastStatus, new GetFeedObserver());
+            followService.loadMoreFollowersItems(user, PAGE_SIZE, lastFollowee, new GetFollowingObserver());
         }
     }
 
     public void loadUser(TextView userAlias) {
-        userService.loadUser(userAlias, new GetFeedPresenter.GetUserObserver());
+        userService.loadUser(userAlias, new GetUserObserver());
     }
 
 
-    private class GetFeedObserver implements StatusService.Observer {
+    private class GetFollowingObserver implements FollowService.Observer {
         @Override
         public void displayMessage(String message) {
             isLoading = false;
@@ -57,12 +56,12 @@ public class GetFeedPresenter {
         }
 
         @Override
-        public void addStatuses(List<Status> statuses, boolean hasMorePages) {
+        public void addFollows(List<User> followees, boolean hasMorePages) {
             isLoading = false;
             view.setLoadingFooter(isLoading);
-            lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
+            lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
             setHasMorePages(hasMorePages);
-            view.addMoreItems(statuses);
+            view.addMoreItems(followees);
         }
     }
 
