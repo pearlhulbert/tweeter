@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 import edu.byu.cs.tweeter.client.backgroundTask.GetFollowersTask;
+import edu.byu.cs.tweeter.client.backgroundTask.PageTasks;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -29,14 +30,14 @@ public class GetFollowersHandler extends Handler {
 
         boolean success = msg.getData().getBoolean(GetFollowersTask.SUCCESS_KEY);
         if (success) {
-            List<User> followers = (List<User>) msg.getData().getSerializable(GetFollowersTask.FOLLOWERS_KEY);
-            boolean hasMorePages = msg.getData().getBoolean(GetFollowersTask.MORE_PAGES_KEY);
+            List<User> followers = (List<User>) msg.getData().getSerializable(PageTasks.ITEMS_KEY);
+            boolean hasMorePages = msg.getData().getBoolean(PageTasks.MORE_PAGES_KEY);
             observer.addFollows(followers, hasMorePages);
-        } else if (msg.getData().containsKey(GetFollowersTask.MESSAGE_KEY)) {
-            String message = msg.getData().getString(GetFollowersTask.MESSAGE_KEY);
+        } else if (msg.getData().containsKey(PageTasks.MESSAGE_KEY)) {
+            String message = msg.getData().getString(PageTasks.MESSAGE_KEY);
             observer.displayMessage("Failed to get followers: " + message);
-        } else if (msg.getData().containsKey(GetFollowersTask.EXCEPTION_KEY)) {
-            Exception ex = (Exception) msg.getData().getSerializable(GetFollowersTask.EXCEPTION_KEY);
+        } else if (msg.getData().containsKey(PageTasks.EXCEPTION_KEY)) {
+            Exception ex = (Exception) msg.getData().getSerializable(PageTasks.EXCEPTION_KEY);
             observer.displayMessage("Failed to get followers because of exception: " + ex.getMessage());
         }
     }

@@ -2,12 +2,11 @@ package edu.byu.cs.tweeter.client.backgroundTask.handler;
 
 import android.os.Bundle;
 
-import edu.byu.cs.tweeter.client.backgroundTask.FollowTask;
 import edu.byu.cs.tweeter.client.backgroundTask.observer.SimpleNotificationObserver;
 
-public class FollowHandler extends SimpleNotificationHandler {
+public class SimpleNotificationHandler extends BackgroundTaskHandler<SimpleNotificationObserver> {
 
-    public FollowHandler(SimpleNotificationObserver observer) {
+    public SimpleNotificationHandler(SimpleNotificationObserver observer) {
         super(observer);
     }
 
@@ -15,5 +14,4 @@ public class FollowHandler extends SimpleNotificationHandler {
     protected void handleSuccess(Bundle data, SimpleNotificationObserver observer) {
         observer.handleSuccess();
     }
-
 }

@@ -8,16 +8,13 @@ import edu.byu.cs.tweeter.client.backgroundTask.GetFollowersTask;
 import edu.byu.cs.tweeter.client.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.backgroundTask.handler.GetFollowersHandler;
 import edu.byu.cs.tweeter.client.backgroundTask.handler.GetFollowingHandler;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.ServiceObserver;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService {
 
-    public interface Observer {
-
-        void displayMessage(String message);
-
-        void addFollows(List<User> followees, boolean hasMorePages);
+    public interface Observer extends ServiceObserver {
     }
 
     public void loadMoreFollowingItems(User user, int pageSize, User lastFollowee, Observer observer) {
