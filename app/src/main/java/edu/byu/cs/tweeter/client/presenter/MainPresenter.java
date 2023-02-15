@@ -8,13 +8,13 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class MainPresenter {
     private final View view;
-    private FollowService followingService;
+    private FollowService followService;
     private LogoutService logoutService;
     private PostStatusService postStatusService;
 
     public MainPresenter(View view) {
         this.view = view;
-        followingService = new FollowService();
+        followService = new FollowService();
         logoutService = new LogoutService();
         postStatusService = new PostStatusService();
     }
@@ -32,7 +32,7 @@ public class MainPresenter {
     }
 
     public void isFollower(User selectedUser) {
-        followingService.isFollower(selectedUser, new FollowingObserver());
+        followService.isFollower(selectedUser, new FollowingObserver());
     }
 
     public void postStatus(String post) {
@@ -40,7 +40,7 @@ public class MainPresenter {
     }
 
     public void getCounts(User selectedUser) {
-        followingService.getCounts(selectedUser, new FollowingObserver());
+        followService.getCounts(selectedUser, new FollowingObserver());
     }
 
     public interface View {

@@ -1,9 +1,12 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Message;
 import android.widget.TextView;
 
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.backgroundTask.GetFollowingTask;
+import edu.byu.cs.tweeter.client.backgroundTask.PageTasks;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -47,7 +50,8 @@ public class GetFollowersPresenter {
     }
 
 
-    private class GetFollowingObserver implements FollowService.Observer {
+    private class GetFollowingObserver implements FollowService.PageObserver {
+
         @Override
         public void displayMessage(String message) {
             isLoading = false;
@@ -56,7 +60,9 @@ public class GetFollowersPresenter {
         }
 
         @Override
-        public void addFollows(List<User> followees, boolean hasMorePages) {
+        public void handleSuccess(List<User> followees, boolean hasMorePages, Message msg) {
+            followees = (List<User>) msg.getData().getSerializable(PageTasks.ITEMS_KEY);
+            hasMorePages = msg.getData().getBoolean(GetFollowingTask.MORE_PAGES_KEY);
             isLoading = false;
             view.setLoadingFooter(isLoading);
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
@@ -64,20 +70,6 @@ public class GetFollowersPresenter {
             view.addMoreItems(followees);
         }
 
-        @Override
-        public void handleFailure(String message) {
-
-        }
-
-        @Override
-        public void handleException(Exception ex) {
-
-        }
-
-        @Override
-        public void handleSuccess() {
-
-        }
     }
 
     private class GetUserObserver implements UserService.Observer {

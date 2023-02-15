@@ -1,6 +1,7 @@
 package edu.byu.cs.tweeter.client.backgroundTask.handler;
 
 import android.os.Bundle;
+import android.os.Message;
 
 import edu.byu.cs.tweeter.client.backgroundTask.observer.SimpleNotificationObserver;
 
@@ -13,7 +14,7 @@ public class SimpleNotificationHandler extends BackgroundTaskHandler<SimpleNotif
     }
 
     @Override
-    protected void handleSuccess(Bundle data, SimpleNotificationObserver observer) {
+    protected void handleSuccess(Message data, SimpleNotificationObserver observer) {
         observer.handleSuccess();
     }
 }

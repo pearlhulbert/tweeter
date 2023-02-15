@@ -23,15 +23,15 @@ public abstract class BackgroundTaskHandler<T extends ServiceObserver>  extends 
     public void handleMessage(@NonNull Message msg) {
         boolean success = msg.getData().getBoolean(BackgroundTask.SUCCESS_KEY);
         if (success) {
-            handleSuccess(msg.getData(), observer);
+            handleSuccess(msg, observer);
         } else if (msg.getData().containsKey(BackgroundTask.MESSAGE_KEY)) {
             String message = msg.getData().getString(BackgroundTask.MESSAGE_KEY);
-            observer.handleFailure(message);
+            observer.displayMessage(message);
         } else if (msg.getData().containsKey(BackgroundTask.EXCEPTION_KEY)) {
             Exception ex = (Exception) msg.getData().getSerializable(BackgroundTask.EXCEPTION_KEY);
-            observer.handleException(ex);
+            observer.displayMessage(ex.getMessage());
         }
     }
 
-    protected abstract void handleSuccess(Bundle data, T observer);
+    protected abstract void handleSuccess(Message data, T observer);
 }
