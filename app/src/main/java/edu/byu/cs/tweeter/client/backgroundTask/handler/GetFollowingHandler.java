@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.backgroundTask.handler;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -10,17 +11,19 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.client.backgroundTask.GetFollowingTask;
 import edu.byu.cs.tweeter.client.backgroundTask.PageTasks;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.PageTaskObserver;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
+import edu.byu.cs.tweeter.client.model.service.FollowingService;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**
  * Message handler (i.e., observer) for GetFollowingTask.
  */
-public class GetFollowingHandler extends BackgroundTaskHandler {
+public class GetFollowingHandler extends Handler {
 
     private FollowService.Observer observer;
-
     public GetFollowingHandler(FollowService.Observer observer) {
+        super(Looper.getMainLooper());
         this.observer = observer;
     }
 
@@ -40,4 +43,5 @@ public class GetFollowingHandler extends BackgroundTaskHandler {
             observer.displayMessage("Failed to get following because of exception: " + ex.getMessage());
         }
     }
+
 }

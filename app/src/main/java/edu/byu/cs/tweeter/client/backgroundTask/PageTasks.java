@@ -30,10 +30,6 @@ public abstract class PageTasks<T> extends AuthenticatedTask {
     private List<T> items;
     private boolean hasMorePages;
 
-    protected FakeData getFakeData() {
-        return FakeData.getInstance();
-    }
-
     public User getTargetUser() {
         return targetUser;
     }

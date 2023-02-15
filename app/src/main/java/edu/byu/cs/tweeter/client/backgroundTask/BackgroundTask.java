@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import edu.byu.cs.tweeter.model.domain.User;
+import edu.byu.cs.tweeter.util.FakeData;
 import edu.byu.cs.tweeter.util.Pair;
 
 public abstract class BackgroundTask implements Runnable {
@@ -75,13 +76,15 @@ public abstract class BackgroundTask implements Runnable {
         try {
             processTask();
             sendSuccessMessage();
-
         } catch (Exception ex) {
             Log.e(LOG_TAG, "Failed to get followees", ex);
             sendExceptionMessage(ex);
         }
     }
 
+    protected FakeData getFakeData() {
+        return FakeData.getInstance();
+    }
     protected abstract void processTask();
 
 }

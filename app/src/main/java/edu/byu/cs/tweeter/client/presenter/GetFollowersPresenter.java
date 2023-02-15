@@ -63,6 +63,21 @@ public class GetFollowersPresenter {
             setHasMorePages(hasMorePages);
             view.addMoreItems(followees);
         }
+
+        @Override
+        public void handleFailure(String message) {
+
+        }
+
+        @Override
+        public void handleException(Exception ex) {
+
+        }
+
+        @Override
+        public void handleSuccess() {
+
+        }
     }
 
     private class GetUserObserver implements UserService.Observer {

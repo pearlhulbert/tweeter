@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.FollowingService;
 import edu.byu.cs.tweeter.client.model.service.LogoutService;
 import edu.byu.cs.tweeter.client.model.service.PostStatusService;
@@ -7,24 +8,24 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class MainPresenter {
     private final View view;
-    private FollowingService followingService;
+    private FollowService followingService;
     private LogoutService logoutService;
     private PostStatusService postStatusService;
 
     public MainPresenter(View view) {
         this.view = view;
-        followingService = new FollowingService();
+        followingService = new FollowService();
         logoutService = new LogoutService();
         postStatusService = new PostStatusService();
     }
 
-    public void unfollowUser(User selectedUser) {
-        followingService.unfollowUser(selectedUser, new FollowingObserver());
-    }
-
-    public void followUser(User selectedUser) {
-        followingService.followUser(selectedUser, new FollowingObserver());
-    }
+//    public void unfollowUser(User selectedUser) {
+//        followingService.unfollowUser(selectedUser, new FollowingObserver());
+//    }
+//
+//    public void followUser(User selectedUser) {
+//        followingService.followUser(selectedUser, new FollowingObserver());
+//    }
 
     public void startLogout() {
         logoutService.startLogout(new LogoutObserver());

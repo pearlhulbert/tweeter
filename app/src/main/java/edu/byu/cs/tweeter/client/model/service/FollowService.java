@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.model.service;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,24 +24,27 @@ import edu.byu.cs.tweeter.model.domain.User;
 
 public class FollowService {
 
-    public interface followObserver extends SimpleNotificationObserver {
+    public interface Observer extends SimpleNotificationObserver {
+        void displayMessage(String message);
+
+        void addFollows(List<User> followees, boolean hasMorePages);
     }
 
-    public void loadMoreFollowingItems(User user, int pageSize, User lastFollowee, followObserver observer) {
+    public void loadMoreFollowingItems(User user, int pageSize, User lastFollowee, Observer observer) {
         GetFollowingTask getFollowingTask = new GetFollowingTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastFollowee, new GetFollowingHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFollowingTask);
     }
 
-    public void loadMoreFollowersItems(User user, int pageSize, User lastFollower, followObserver observer) {
+    public void loadMoreFollowersItems(User user, int pageSize, User lastFollower, Observer observer) {
         GetFollowersTask getFollowersTask = new GetFollowersTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastFollower, new GetFollowersHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getFollowersTask);
     }
 
-    public void unfollowUser(User selectedUser, followObserver observer) {
+    public void unfollowUser(User selectedUser, Observer observer) {
         UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
                 selectedUser, new SimpleNotificationHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -48,7 +52,7 @@ public class FollowService {
         observer.handleSuccess();
     }
 
-    public void followUser(User selectedUser, followObserver observer) {
+    public void followUser(User selectedUser, Observer observer) {
         BackgroundTask followTask = new FollowTask(Cache.getInstance().getCurrUserAuthToken(),
                 selectedUser, new SimpleNotificationHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
