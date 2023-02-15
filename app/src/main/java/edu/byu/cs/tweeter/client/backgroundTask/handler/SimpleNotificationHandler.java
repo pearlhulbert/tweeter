@@ -6,6 +6,8 @@ import edu.byu.cs.tweeter.client.backgroundTask.observer.SimpleNotificationObser
 
 public class SimpleNotificationHandler extends BackgroundTaskHandler<SimpleNotificationObserver> {
 
+    // used for handlers that don't pass parameters back
+
     public SimpleNotificationHandler(SimpleNotificationObserver observer) {
         super(observer);
     }
