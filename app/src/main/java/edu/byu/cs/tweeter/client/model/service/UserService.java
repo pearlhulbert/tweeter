@@ -11,6 +11,7 @@ import java.util.Base64;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import edu.byu.cs.tweeter.client.backgroundTask.BackgroundTaskUtils;
 import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.client.backgroundTask.LogoutTask;
@@ -25,7 +26,9 @@ import edu.byu.cs.tweeter.client.backgroundTask.observer.SingleObserver;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class UserService {
+public class UserService extends Service {
+
+    private BackgroundTaskUtils utils = createUtils();
 
     public interface LogObserver extends AuthenticateTaskObserver {
         void validateLogin(EditText alias, EditText password);
@@ -50,16 +53,14 @@ public class UserService {
     public void loadUser(TextView userAlias, UObserver observer) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
                 userAlias.getText().toString(), new GetUserHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getUserTask);
+       utils.runTask(getUserTask);
         observer.displayMessage("Getting user's profile...");
     }
 
     public void startLogout(LogOutObserver observer) {
         observer.logoutToast();
         LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(logoutTask);
+        utils.runTask(logoutTask);
     }
 
     public void login(EditText alias, EditText password, LogObserver observer) {
@@ -70,8 +71,7 @@ public class UserService {
             LoginTask loginTask = new LoginTask(alias.getText().toString(),
                     password.getText().toString(),
                     new LoginHandler(observer));
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(loginTask);
+           utils.runTask(loginTask);
         } catch (Exception e) {
             observer.setErrorView(e);
         }
@@ -96,8 +96,7 @@ public class UserService {
             RegisterTask registerTask = new RegisterTask(firstName.getText().toString(), lastName.getText().toString(),
                     alias.getText().toString(), password.getText().toString(), imageBytesBase64, new RegisterHandler(observer));
 
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(registerTask);
+            utils.runTask(registerTask);
         } catch (Exception e) {
             observer.setErrorView(e);
         }

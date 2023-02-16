@@ -186,10 +186,10 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         logOutToast.show();
     }
 
-    @Override
-    public void cancelLogoutToast() {
-        logOutToast.cancel();
-    }
+//    @Override
+//    public void cancelLogoutToast() {
+//        logOutToast.cancel();
+//    }
 
     @Override
     public void postToast() {
@@ -197,10 +197,10 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         postingToast.show();
     }
 
-    @Override
-    public void cancelPostToast() {
-        postingToast.cancel();
-    }
+//    @Override
+//    public void cancelPostToast() {
+//        postingToast.cancel();
+//    }
 
 
     @Override
@@ -214,11 +214,11 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         startActivity(intent);
     }
 
-    @Override
-    public void displayExceptionAndLog(String message, Exception e) {
-        Log.e(LOG_TAG, e.getMessage(), e);
-        Toast.makeText(this, message + e.getMessage(), Toast.LENGTH_LONG).show();
-    }
+//    @Override
+//    public void displayExceptionAndLog(String message, Exception e) {
+//        Log.e(LOG_TAG, e.getMessage(), e);
+//        Toast.makeText(this, message + e.getMessage(), Toast.LENGTH_LONG).show();
+//    }
 
     @Override
     public void updateRelationship(boolean isFollower) {

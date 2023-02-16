@@ -1,10 +1,7 @@
 package edu.byu.cs.tweeter.client.presenter;
 
-import android.os.Message;
 import android.widget.EditText;
-import android.widget.ImageView;
 
-import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;

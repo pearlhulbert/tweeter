@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import edu.byu.cs.tweeter.client.backgroundTask.BackgroundTaskUtils;
 import edu.byu.cs.tweeter.client.backgroundTask.GetFeedTask;
 import edu.byu.cs.tweeter.client.backgroundTask.GetStoryTask;
 import edu.byu.cs.tweeter.client.backgroundTask.PostStatusTask;
@@ -21,7 +22,9 @@ import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class StatusService {
+public class StatusService extends Service {
+
+    private BackgroundTaskUtils utils = createUtils();
 
     public interface Observer extends PageTaskObserver<Status> {
     }
@@ -33,15 +36,13 @@ public class StatusService {
     public void loadMoreFeedItems(User user, int pageSize, Status lastStatus, Observer observer) {
         GetFeedTask getFeedTask = new GetFeedTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetFeedHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getFeedTask);
+        utils.runTask(getFeedTask);
     }
 
     public void loadMoreStoryItems(User user, int pageSize, Status lastStatus, Observer observer) {
         GetStoryTask getStoryTask = new GetStoryTask(Cache.getInstance().getCurrUserAuthToken(),
                 user, pageSize, lastStatus, new GetStoryHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(getStoryTask);
+        utils.runTask(getStoryTask);
     }
 
     private String getFormattedDateTime() throws ParseException {
@@ -114,8 +115,7 @@ public class StatusService {
             Status newStatus = new Status(post, Cache.getInstance().getCurrUser(), getFormattedDateTime(), parseURLs(post), parseMentions(post));
             PostStatusTask statusTask = new PostStatusTask(Cache.getInstance().getCurrUserAuthToken(),
                     newStatus, new PostStatusHandler(observer));
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            executor.execute(statusTask);
+            utils.runTask(statusTask);
         } catch (Exception ex) {
             observer.displayMessage("Failed to post the status because of exception: " + ex.getMessage());
 
