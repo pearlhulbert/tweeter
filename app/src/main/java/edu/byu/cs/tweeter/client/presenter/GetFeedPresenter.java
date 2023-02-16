@@ -61,9 +61,7 @@ public class GetFeedPresenter {
         }
 
         @Override
-        public void handleSuccess(List<Status> statuses, boolean hasMorePages, Message msg) {
-            statuses = (List<Status>) msg.getData().getSerializable(PageTasks.ITEMS_KEY);
-            hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
+        public void handleSuccess(List<Status> statuses, boolean hasMorePages) {
             isLoading = false;
             view.setLoadingFooter(isLoading);
             lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
@@ -72,27 +70,16 @@ public class GetFeedPresenter {
         }
     }
 
-    private class GetUserObserver implements UserService.Observer {
+    private class GetUserObserver implements UserService.UObserver {
         @Override
-        public void displaySuccessMessage(String message) {
+        public void displayMessage(String message) {
             view.displayErrorMessage(message);
         }
 
         @Override
-        public void displayFailureMessage(String message) {
-            view.displayErrorMessage("Failed to get user's profile..." + message);
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-            view.displayErrorMessage("Failed to get following because of exception: " + ex.getMessage());
-        }
-
-        @Override
-        public void startNewAcivity(User user) {
+        public void handleSuccess(User user) {
             view.startActivity(user);
         }
-
     }
 
     public boolean hasMorePages() {

@@ -22,5 +22,4 @@ public class GetFollowersHandler extends PageTaskHandler<User>  {
     public GetFollowersHandler(PageTaskObserver<User> observer) {
         super(observer);
     }
-
 }

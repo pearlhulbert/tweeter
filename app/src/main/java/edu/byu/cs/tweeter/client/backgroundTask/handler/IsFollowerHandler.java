@@ -7,29 +7,18 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import edu.byu.cs.tweeter.client.backgroundTask.IsFollowerTask;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.SingleObserver;
 import edu.byu.cs.tweeter.client.model.service.FollowingService;
 
-public class IsFollowerHandler extends Handler {
+public class IsFollowerHandler extends BackgroundTaskHandler<SingleObserver<Boolean>> {
 
-    private FollowingService.Observer observer;
-
-    public IsFollowerHandler(FollowingService.Observer observer) {
-        super(Looper.getMainLooper());
-        this.observer = observer;
+    public IsFollowerHandler(SingleObserver observer) {
+        super(observer);
     }
 
     @Override
-    public void handleMessage(@NonNull Message msg) {
-        boolean success = msg.getData().getBoolean(IsFollowerTask.SUCCESS_KEY);
-        if (success) {
-            boolean isFollower = msg.getData().getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
-            observer.updateFollowRelationship(isFollower);
-        } else if (msg.getData().containsKey(IsFollowerTask.MESSAGE_KEY)) {
-            String message = msg.getData().getString(IsFollowerTask.MESSAGE_KEY);
-            observer.showErrorMessage("Failed to determine following relationship: " + message);
-        } else if (msg.getData().containsKey(IsFollowerTask.EXCEPTION_KEY)) {
-            Exception ex = (Exception) msg.getData().getSerializable(IsFollowerTask.EXCEPTION_KEY);
-            observer.showErrorMessage("Failed to determine following relationship because of exception: " + ex.getMessage());
-        }
+    protected void handleSuccess(Message data, SingleObserver<Boolean> observer) {
+        boolean isFollower = data.getData().getBoolean(IsFollowerTask.IS_FOLLOWER_KEY);
+        observer.handleSuccess(isFollower);
     }
 }

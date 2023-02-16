@@ -21,6 +21,7 @@ import edu.byu.cs.tweeter.client.backgroundTask.handler.SimpleNotificationHandle
 import edu.byu.cs.tweeter.client.backgroundTask.observer.CountObserver;
 import edu.byu.cs.tweeter.client.backgroundTask.observer.PageTaskObserver;
 import edu.byu.cs.tweeter.client.backgroundTask.observer.SimpleNotificationObserver;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.SingleObserver;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.model.domain.User;
 
@@ -35,6 +36,13 @@ public class FollowService {
     public interface CountingObserver extends CountObserver {
         void updateFollowersCount(int count);
         void updateFolloweeCount(int count);
+    }
+
+    public interface RelObserver extends SingleObserver<Boolean> {
+        void updateSelectedUserFollowingAndFollowers();
+        void updateFollowButton(boolean isFollowing);
+        void setFollowButton(boolean b);
+        void updateFollowRelationship(boolean isFollower);
     }
 
     public void loadMoreFollowingItems(User user, int pageSize, User lastFollowee, PageObserver observer) {
@@ -82,7 +90,7 @@ public class FollowService {
 
     }
 
-    public void isFollower(User selectedUser, FollowingService.Observer observer) {
+    public void isFollower(User selectedUser, RelObserver observer) {
         IsFollowerTask isFollowerTask = new IsFollowerTask(Cache.getInstance().getCurrUserAuthToken(),
                 Cache.getInstance().getCurrUser(), selectedUser, new IsFollowerHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();

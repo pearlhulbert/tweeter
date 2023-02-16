@@ -24,13 +24,13 @@ public class MainPresenter {
         postStatusService = new StatusService();
     }
 
-//    public void unfollowUser(User selectedUser) {
-//        followingService.unfollowUser(selectedUser, new FollowingObserver());
-//    }
-//
-//    public void followUser(User selectedUser) {
-//        followingService.followUser(selectedUser, new FollowingObserver());
-//    }
+    public void unfollowUser(User selectedUser) {
+       followService.unfollowUser(selectedUser, new FollowObserver());
+    }
+
+    public void followUser(User selectedUser) {
+      followService.followUser(selectedUser, new FollowObserver());
+    }
 
     public void startLogout() {
         logoutService.startLogout(new LogoutObserver());
@@ -63,30 +63,14 @@ public class MainPresenter {
 
         void setLogoutToast();
 
-        void cancelLogoutToast();
-
         void logoutUser();
 
         void postToast();
 
-        void cancelPostToast();
-
-        void displayExceptionAndLog(String message, Exception ex);
-
         void updateRelationship(boolean isFollowing);
     }
 
-    private class FollowingObserver implements FollowingService.Observer {
-
-        @Override
-        public void showSuccessMessage(String message, User selectedUser) {
-            view.displayMessage(message + selectedUser.getAlias());
-        }
-
-        @Override
-        public void showErrorMessage(String message) {
-            view.displayMessage(message);
-        }
+    private class FollowingObserver implements FollowService.RelObserver {
 
         @Override
         public void updateSelectedUserFollowingAndFollowers() {
@@ -107,6 +91,16 @@ public class MainPresenter {
         public void updateFollowRelationship(boolean isFollowing) {
             view.updateRelationship(isFollowing);
         }
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+
+        @Override
+        public void handleSuccess(Boolean param) {
+            view.updateRelationship(param);
+        }
     }
 
     private class LogoutObserver implements UserService.LogOutObserver {
@@ -117,13 +111,8 @@ public class MainPresenter {
         }
 
         @Override
-        public void logoutUser() {
-            view.logoutUser();
-        }
-
-        @Override
         public void handleSuccess() {
-
+            view.logoutUser();
         }
 
         @Override
@@ -168,13 +157,26 @@ public class MainPresenter {
         }
 
         @Override
-        public void handleSuccess(Message data) {
+        public void handleSuccess(int count) {
+            view.updateFolloweeCount(count);
+            view.updateFollowerCount(count);
+        }
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+    }
+
+    private class FollowObserver implements FollowService.SimpleObserver {
+        @Override
+        public void handleSuccess() {
 
         }
 
         @Override
-        public void updateCount(int count) {
-
+        public void postToast() {
+            view.postToast();
         }
 
         @Override

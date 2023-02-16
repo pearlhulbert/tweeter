@@ -7,33 +7,24 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.SimpleNotificationObserver;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.SingleObserver;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**
  * Message handler (i.e., observer) for GetUserTask.
  */
-public class GetUserHandler extends Handler {
+public class GetUserHandler extends BackgroundTaskHandler<SingleObserver<User>> {
 
-    private UserService.Observer observer;
 
-    public GetUserHandler(UserService.Observer observer) {
-        super(Looper.getMainLooper());
-        this.observer = observer;
+    public GetUserHandler(SingleObserver observer) {
+        super(observer);
     }
 
     @Override
-    public void handleMessage(@NonNull Message msg) {
-        boolean success = msg.getData().getBoolean(GetUserTask.SUCCESS_KEY);
-        if (success) {
-            User user = (User) msg.getData().getSerializable(GetUserTask.USER_KEY);
-            observer.startNewAcivity(user);
-        } else if (msg.getData().containsKey(GetUserTask.MESSAGE_KEY)) {
-            String message = msg.getData().getString(GetUserTask.MESSAGE_KEY);
-            observer.displayFailureMessage(message);
-        } else if (msg.getData().containsKey(GetUserTask.EXCEPTION_KEY)) {
-            Exception ex = (Exception) msg.getData().getSerializable(GetUserTask.EXCEPTION_KEY);
-            observer.displayException(ex);
-        }
+    protected void handleSuccess(Message data, SingleObserver observer) {
+        User user = (User) data.getData().getSerializable(GetUserTask.USER_KEY);
+        observer.handleSuccess(user);
     }
 }

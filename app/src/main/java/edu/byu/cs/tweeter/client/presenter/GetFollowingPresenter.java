@@ -61,9 +61,7 @@ public class GetFollowingPresenter {
         }
 
         @Override
-        public void handleSuccess(List<User> followees, boolean hasMorePages, Message msg) {
-            followees = (List<User>) msg.getData().getSerializable(PageTasks.ITEMS_KEY);
-            hasMorePages = msg.getData().getBoolean(GetFollowingTask.MORE_PAGES_KEY);
+        public void handleSuccess(List<User> followees, boolean hasMorePages) {
             isLoading = false;
             view.setLoadingFooter(isLoading);
             lastFollowee = (followees.size() > 0) ? followees.get(followees.size() - 1) : null;
@@ -73,27 +71,17 @@ public class GetFollowingPresenter {
 
     }
 
-    private class GetUserObserver implements UserService.Observer {
+    private class GetUserObserver implements UserService.UObserver {
+
         @Override
-        public void displaySuccessMessage(String message) {
+        public void displayMessage(String message) {
             view.displayErrorMessage(message);
         }
 
         @Override
-        public void displayFailureMessage(String message) {
-            view.displayErrorMessage("Failed to get user's profile..." + message);
-        }
-
-        @Override
-        public void displayException(Exception ex) {
-            view.displayErrorMessage("Failed to get following because of exception: " + ex.getMessage());
-        }
-
-        @Override
-        public void startNewAcivity(User user) {
+        public void handleSuccess(User user) {
             view.startActivity(user);
         }
-
     }
 
     public boolean hasMorePages() {

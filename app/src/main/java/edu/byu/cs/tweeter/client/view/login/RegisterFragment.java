@@ -144,5 +144,10 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
         }
     }
 
+    @Override
+    public void displayMessage(String message) {
+
+    }
+
 
 }

@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class LoginPresenter {
@@ -19,6 +20,8 @@ public class LoginPresenter {
         void setErrorView(Exception e);
 
         void startActivity(User loggedUser);
+
+        void displayMessage(String message);
     }
 
     private View view;
@@ -33,7 +36,7 @@ public class LoginPresenter {
         loginService.login(alias, password, new LoginObserver());
     }
 
-    private class LoginObserver implements UserService.AuthObserver {
+    private class LoginObserver implements UserService.LogObserver {
 
         @Override
         public void loginUnsuccessful(String message) {
@@ -44,12 +47,7 @@ public class LoginPresenter {
         public void setLoginToast() {
             view.loginToast();
         }
-
-        @Override
-        public void displaySuccessMessage(String message) {
-
-        }
-
+        
         @Override
         public void validateLogin(EditText alias, EditText password) {
             if (alias.getText().length() > 0 && alias.getText().charAt(0) != '@') {
@@ -69,33 +67,13 @@ public class LoginPresenter {
         }
 
         @Override
-        public void startActivity(User loggedUser) {
-            view.startActivity(loggedUser);
-        }
-
-        @Override
-        public void setRegisterToast() {
-
-        }
-
-        @Override
-        public void validateRegistration(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload) {
-
-        }
-
-        @Override
-        public void registerUnsuccessful(String message) {
-
-        }
-
-        @Override
-        public void handleSuccess(Message msg) {
-
+        public void handleSuccess(User currUser, AuthToken authToken) {
+            view.startActivity(currUser);
         }
 
         @Override
         public void displayMessage(String message) {
-
+            view.displayMessage(message);
         }
     }
 }

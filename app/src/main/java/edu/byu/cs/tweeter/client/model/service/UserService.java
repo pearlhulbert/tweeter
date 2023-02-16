@@ -21,37 +21,38 @@ import edu.byu.cs.tweeter.client.backgroundTask.handler.LogoutHandler;
 import edu.byu.cs.tweeter.client.backgroundTask.handler.RegisterHandler;
 import edu.byu.cs.tweeter.client.backgroundTask.observer.AuthenticateTaskObserver;
 import edu.byu.cs.tweeter.client.backgroundTask.observer.SimpleNotificationObserver;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.SingleObserver;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class UserService {
 
-    public interface AuthObserver extends AuthenticateTaskObserver {
-
-        void displaySuccessMessage(String message);
-
+    public interface LogObserver extends AuthenticateTaskObserver {
         void validateLogin(EditText alias, EditText password);
         void setLoginToast();
-        void setErrorView(Exception e);
         void loginUnsuccessful(String message);
-        void startActivity(User currUser);
+    }
+
+    public interface RegObserver extends AuthenticateTaskObserver {
         void setRegisterToast();
         void validateRegistration(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload);
         void registerUnsuccessful(String message);
     }
 
     public interface LogOutObserver extends SimpleNotificationObserver {
-        void logoutUser();
         void logoutToast();
         void displayMessage(String message);
     }
 
-    public void loadUser(TextView userAlias, AuthObserver observer) {
+    public interface UObserver extends SingleObserver<User> {
+    }
+
+    public void loadUser(TextView userAlias, UObserver observer) {
         GetUserTask getUserTask = new GetUserTask(Cache.getInstance().getCurrUserAuthToken(),
                 userAlias.getText().toString(), new GetUserHandler(observer));
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(getUserTask);
-        observer.displaySuccessMessage("Getting user's profile...");
+        observer.displayMessage("Getting user's profile...");
     }
 
     public void startLogout(LogOutObserver observer) {
@@ -61,7 +62,7 @@ public class UserService {
         executor.execute(logoutTask);
     }
 
-    public void login(EditText alias, EditText password, AuthObserver observer) {
+    public void login(EditText alias, EditText password, LogObserver observer) {
         try {
             observer.validateLogin(alias, password);
             observer.setLoginToast();
@@ -76,7 +77,7 @@ public class UserService {
         }
     }
 
-    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload, AuthObserver observer) {
+    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload, RegObserver observer) {
         // Register and move to MainActivity.
         try {
             observer.validateRegistration(firstName, lastName, alias, password, imageToUpload);
