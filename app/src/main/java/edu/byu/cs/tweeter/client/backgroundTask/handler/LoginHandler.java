@@ -7,6 +7,7 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import edu.byu.cs.tweeter.client.backgroundTask.LoginTask;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.AuthenticateTaskObserver;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
@@ -15,24 +16,41 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Message handler (i.e., observer) for LoginTask
  */
-public class LoginHandler extends Handler {
+public class LoginHandler extends AuthenticateTaskHandler {
 
-    private LoginService.Observer observer;
 
-    public LoginHandler(LoginService.Observer observer) {
-        super(Looper.getMainLooper());
-        this.observer = observer;
+    public LoginHandler(AuthenticateTaskObserver observer) {
+        super(observer);
+    }
+
+    @Override
+    protected void handleSuccess(Message data, AuthenticateTaskObserver observer) {
+        observer.handleSuccess(data);
+    }
+
+    @Override
+    protected User getCurrentUser(Message data, AuthenticateTaskObserver observer) {
+        User loggedInUser = (User) data.getData().getSerializable(LoginTask.USER_KEY);
+        Cache.getInstance().setCurrUser(loggedInUser);
+        return loggedInUser;
+    }
+
+    @Override
+    protected AuthToken getAuthToken(Message data, AuthenticateTaskObserver observer) {
+        AuthToken authToken = (AuthToken) data.getData().getSerializable(LoginTask.AUTH_TOKEN_KEY);
+        Cache.getInstance().setCurrUserAuthToken(authToken);
+        return authToken;
     }
 
     @Override
     public void handleMessage(@NonNull Message msg) {
         boolean success = msg.getData().getBoolean(LoginTask.SUCCESS_KEY);
         if (success) {
-            User loggedInUser = (User) msg.getData().getSerializable(LoginTask.USER_KEY);
-            AuthToken authToken = (AuthToken) msg.getData().getSerializable(LoginTask.AUTH_TOKEN_KEY);
+
+
             // Cache user session information
-            Cache.getInstance().setCurrUser(loggedInUser);
-            Cache.getInstance().setCurrUserAuthToken(authToken);
+
+
 
             observer.startActivity(loggedInUser);
 

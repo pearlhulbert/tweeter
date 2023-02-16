@@ -7,18 +7,31 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import edu.byu.cs.tweeter.client.backgroundTask.RegisterTask;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.AuthenticateTaskObserver;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.RegisterService;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class RegisterHandler extends Handler {
+public class RegisterHandler extends AuthenticateTaskHandler {
 
-    private RegisterService.Observer observer;
+    public RegisterHandler(AuthenticateTaskObserver observer) {
+        super(observer);
+    }
 
-    public RegisterHandler(RegisterService.Observer observer) {
-        super(Looper.getMainLooper());
-        this.observer = observer;
+    @Override
+    protected void handleSuccess(Message data, AuthenticateTaskObserver observer) {
+        observer.handleSuccess(data);
+    }
+
+    @Override
+    protected User getCurrentUser(Message data, AuthenticateTaskObserver observer) {
+        return null;
+    }
+
+    @Override
+    protected AuthToken getAuthToken(Message data, AuthenticateTaskObserver observer) {
+        return null;
     }
 
     @Override

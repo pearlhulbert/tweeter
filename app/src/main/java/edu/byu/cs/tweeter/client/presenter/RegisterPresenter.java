@@ -1,9 +1,11 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Message;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import edu.byu.cs.tweeter.client.model.service.RegisterService;
+import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class RegisterPresenter {
@@ -16,18 +18,18 @@ public class RegisterPresenter {
     }
 
     private View view;
-    private RegisterService registerService;
+    private UserService registerService;
 
     public RegisterPresenter(View view) {
         this.view = view;
-        registerService = new RegisterService();
+        registerService = new UserService();
     }
 
     public void register(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload) {
         registerService.register(firstName, lastName, alias, password, imageToUpload, new RegisterObserver());
     }
 
-    private class RegisterObserver implements RegisterService.Observer {
+    private class RegisterObserver implements UserService.AuthObserver {
 
         @Override
         public void registerUnsuccessful(String message) {
@@ -66,13 +68,42 @@ public class RegisterPresenter {
         }
 
         @Override
+        public void displaySuccessMessage(String message) {
+
+        }
+
+        @Override
+        public void validateLogin(EditText alias, EditText password) {
+
+        }
+
+        @Override
+        public void setLoginToast() {
+
+        }
+
+        @Override
         public void setErrorView(Exception e) {
             view.setErrorView(e);
         }
 
         @Override
+        public void loginUnsuccessful(String message) {
+
+        }
+
+        @Override
         public void startActivity(User registeredUser) {
             view.startActivity(registeredUser);
+        }
+
+        @Override
+        public void handleSuccess(Message msg) {
+
+        }
+
+        @Override
+        public void displayMessage(String message) {
         }
     }
 }

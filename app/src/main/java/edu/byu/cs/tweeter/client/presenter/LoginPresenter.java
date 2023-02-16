@@ -2,6 +2,7 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import android.os.Message;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
@@ -70,6 +71,21 @@ public class LoginPresenter {
         @Override
         public void startActivity(User loggedUser) {
             view.startActivity(loggedUser);
+        }
+
+        @Override
+        public void setRegisterToast() {
+
+        }
+
+        @Override
+        public void validateRegistration(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload) {
+
+        }
+
+        @Override
+        public void registerUnsuccessful(String message) {
+
         }
 
         @Override

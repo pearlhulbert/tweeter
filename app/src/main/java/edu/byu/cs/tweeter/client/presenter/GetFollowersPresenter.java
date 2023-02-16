@@ -1,6 +1,8 @@
 package edu.byu.cs.tweeter.client.presenter;
 
 import android.os.Message;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -72,27 +74,61 @@ public class GetFollowersPresenter {
 
     }
 
-    private class GetUserObserver implements UserService.Observer {
+    private class GetUserObserver implements UserService.AuthObserver {
         @Override
         public void displaySuccessMessage(String message) {
             view.displayErrorMessage(message);
         }
 
         @Override
-        public void displayFailureMessage(String message) {
-            view.displayErrorMessage("Failed to get user's profile..." + message);
+        public void validateLogin(EditText alias, EditText password) {
+
         }
 
         @Override
-        public void displayException(Exception ex) {
-            view.displayErrorMessage("Failed to get following because of exception: " + ex.getMessage());
+        public void setLoginToast() {
+
         }
 
         @Override
-        public void startNewAcivity(User user) {
-            view.startActivity(user);
+        public void setErrorView(Exception e) {
+
         }
 
+        @Override
+        public void loginUnsuccessful(String message) {
+
+        }
+
+        @Override
+        public void startActivity(User currUser) {
+            view.startActivity(currUser);
+        }
+
+        @Override
+        public void setRegisterToast() {
+
+        }
+
+        @Override
+        public void validateRegistration(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload) {
+
+        }
+
+        @Override
+        public void registerUnsuccessful(String message) {
+
+        }
+
+        @Override
+        public void handleSuccess(Message msg) {
+
+        }
+
+        @Override
+        public void displayMessage(String message) {
+
+        }
     }
 
     public boolean hasMorePages() {
