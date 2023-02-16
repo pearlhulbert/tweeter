@@ -39,7 +39,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the "Followers" tab.
  */
-public class FollowersFragment extends Fragment implements GetFollowersPresenter.View {
+public class FollowersFragment extends Fragment implements GetFollowersPresenter.FollowView {
 
     private static final String LOG_TAG = "FollowersFragment";
     private static final String USER_KEY = "UserKey";
@@ -89,7 +89,7 @@ public class FollowersFragment extends Fragment implements GetFollowersPresenter
         followersRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
         presenter = new GetFollowersPresenter(this);
-        presenter.loadMoreItems(user);
+        presenter.loadMoreItems();
         return view;
     }
 
@@ -102,10 +102,6 @@ public class FollowersFragment extends Fragment implements GetFollowersPresenter
         }
     }
 
-    @Override
-    public void displayErrorMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public void addMoreItems(List<User> followees) {
@@ -117,6 +113,11 @@ public class FollowersFragment extends Fragment implements GetFollowersPresenter
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -271,7 +272,7 @@ public class FollowersFragment extends Fragment implements GetFollowersPresenter
          * data.
          */
         void loadMoreItems() {
-            presenter.loadMoreItems(user);
+            presenter.loadMoreItems();
         }
 
         /**

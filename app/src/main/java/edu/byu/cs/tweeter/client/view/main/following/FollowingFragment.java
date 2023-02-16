@@ -31,13 +31,14 @@ import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.presenter.GetFollowersPresenter;
 import edu.byu.cs.tweeter.client.presenter.GetFollowingPresenter;
+import edu.byu.cs.tweeter.client.presenter.UserPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.User;
 
 /**
  * Implements the "Following" tab.
  */
-public class FollowingFragment extends Fragment implements GetFollowingPresenter.View {
+public class FollowingFragment extends Fragment implements UserPresenter.UserView {
 
     private static final String LOG_TAG = "FollowingFragment";
     private static final String USER_KEY = "UserKey";
@@ -86,7 +87,7 @@ public class FollowingFragment extends Fragment implements GetFollowingPresenter
         followingRecyclerView.addOnScrollListener(new FollowRecyclerViewPaginationScrollListener(layoutManager));
 
         presenter = new GetFollowingPresenter(this);
-        presenter.loadMoreItems(user);
+        presenter.loadMoreItems();
         return view;
     }
 
@@ -100,11 +101,6 @@ public class FollowingFragment extends Fragment implements GetFollowingPresenter
     }
 
     @Override
-    public void displayErrorMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void addMoreItems(List<User> followees) {
         followingRecyclerViewAdapter.addItems(followees);
     }
@@ -114,6 +110,11 @@ public class FollowingFragment extends Fragment implements GetFollowingPresenter
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -266,7 +267,7 @@ public class FollowingFragment extends Fragment implements GetFollowingPresenter
          * data.
          */
         void loadMoreItems() {
-            presenter.loadMoreItems(user);
+            presenter.loadMoreItems();
         }
 
         /**

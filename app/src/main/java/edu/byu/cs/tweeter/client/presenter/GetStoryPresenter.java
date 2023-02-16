@@ -82,6 +82,8 @@ public class GetStoryPresenter {
         }
     }
 
+
+
     public boolean hasMorePages() {
         return hasMorePages;
     }
