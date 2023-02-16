@@ -38,6 +38,7 @@ import edu.byu.cs.tweeter.client.backgroundTask.GetStoryTask;
 import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.presenter.GetStoryPresenter;
+import edu.byu.cs.tweeter.client.presenter.PagedPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -45,7 +46,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the "Story" tab.
  */
-public class StoryFragment extends Fragment implements GetStoryPresenter.View{
+public class StoryFragment extends Fragment implements PagedPresenter.PageView<Status> {
     private static final String LOG_TAG = "StoryFragment";
     private static final String USER_KEY = "UserKey";
 
@@ -94,7 +95,7 @@ public class StoryFragment extends Fragment implements GetStoryPresenter.View{
 
         storyRecyclerView.addOnScrollListener(new StoryRecyclerViewPaginationScrollListener(layoutManager));
         presenter = new GetStoryPresenter(this);
-        presenter.loadMoreItems(user);
+        presenter.loadMoreItems();
 
         return view;
     }
@@ -109,11 +110,6 @@ public class StoryFragment extends Fragment implements GetStoryPresenter.View{
     }
 
     @Override
-    public void displayErrorMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void addMoreItems(List<Status> statuses) {
         storyRecyclerViewAdapter.addItems(statuses);
     }
@@ -123,6 +119,11 @@ public class StoryFragment extends Fragment implements GetStoryPresenter.View{
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -319,7 +320,7 @@ public class StoryFragment extends Fragment implements GetStoryPresenter.View{
          * data.
          */
         void loadMoreItems() {
-            presenter.loadMoreItems(user);
+            presenter.loadMoreItems();
         }
 
         /**

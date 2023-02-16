@@ -31,7 +31,7 @@ public class MainPresenter {
     }
 
     public void isFollower(User selectedUser) {
-        followService.isFollower(selectedUser, new FollowingObserver());
+        followService.isFollower(selectedUser, new FollowObserver());
     }
 
     public void postStatus(String post) {
@@ -64,7 +64,7 @@ public class MainPresenter {
         void updateRelationship(boolean isFollowing);
     }
 
-    private class FollowingObserver implements FollowService.RelObserver {
+    private class FollowObserver implements FollowService.RelObserver {
 
         @Override
         public void updateSelectedUserFollowingAndFollowers() {
@@ -94,6 +94,7 @@ public class MainPresenter {
         @Override
         public void handleSuccess(Boolean param) {
             view.updateRelationship(param);
+            view.updateButton(param);
         }
     }
 
@@ -162,20 +163,4 @@ public class MainPresenter {
         }
     }
 
-    private class FollowObserver implements FollowService.SimpleObserver {
-        @Override
-        public void handleSuccess() {
-
-        }
-
-        @Override
-        public void postToast() {
-            view.postToast();
-        }
-
-        @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
-        }
-    }
 }

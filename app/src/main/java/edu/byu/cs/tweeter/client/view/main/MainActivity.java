@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements StatusDialogFragm
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //move out?
                 StatusDialogFragment statusDialogFragment = new StatusDialogFragment();
                 statusDialogFragment.show(getSupportFragmentManager(), "post-status-dialog");
             }

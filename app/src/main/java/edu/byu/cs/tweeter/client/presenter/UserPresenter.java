@@ -9,14 +9,8 @@ public abstract class UserPresenter extends PagedPresenter<User>
 {
 
     public UserPresenter(PagedPresenter.PageView view) {
-        this.view = view;
+        super(view);
     }
-
-    public interface UserView extends PagedPresenter.PageView<User> {
-        void addMoreItems(List<User> followees);
-    }
-
-    private UserView view;
 
     protected class GetFollowsObserver implements FollowService.PageObserver {
 

@@ -19,17 +19,12 @@ public class GetFollowersPresenter extends UserPresenter {
         return null;
     }
 
-    public interface FollowView extends UserView {
-
-    }
 
     private FollowService followService;
 
-    private FollowView view;
 
-
-    public GetFollowersPresenter(FollowView view) {
-        this.view = view;
+    public GetFollowersPresenter(PageView view) {
+        super(view);
         followService = new FollowService();
     }
 

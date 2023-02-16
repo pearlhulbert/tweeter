@@ -9,90 +9,31 @@ import edu.byu.cs.tweeter.client.backgroundTask.GetFeedTask;
 import edu.byu.cs.tweeter.client.backgroundTask.PageTasks;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class GetStoryPresenter {
+public class GetStoryPresenter extends StatusPresenter {
 
-    private static final int PAGE_SIZE = 10;
-
-    public interface View {
-        void setLoadingFooter(boolean value);
-        void displayErrorMessage(String message);
-        void addMoreItems(List<Status> statuses);
-        void startActivity(User user);
-    }
 
     private StatusService statusService;
-    private UserService userService;
 
-    private GetStoryPresenter.View view;
 
-    private Status lastStatus;
-
-    private boolean hasMorePages;
-    private boolean isLoading = false;
-
-    public GetStoryPresenter(GetStoryPresenter.View view) {
-        this.view = view;
+    public GetStoryPresenter(PageView view) {
+        super(view);
         statusService = new StatusService();
-        userService = new UserService();
-    }
-
-    public void loadMoreItems(User user) {
-        if (!isLoading) {   // This guard is important for avoiding a race condition in the scrolling code.
-            isLoading = true;
-            view.setLoadingFooter(isLoading);
-            statusService.loadMoreStoryItems(user, PAGE_SIZE, lastStatus, new GetStoryObserver());
-        }
-    }
-
-    public void loadUser(TextView userAlias) {
-        userService.loadUser(userAlias, new GetUserObserver());
     }
 
 
-    private class GetStoryObserver implements StatusService.Observer {
-        @Override
-        public void displayMessage(String message) {
-            isLoading = false;
-            view.setLoadingFooter(isLoading);
-            view.displayErrorMessage(message);
-        }
-
-        @Override
-        public void handleSuccess(List<Status> statuses, boolean hasMorePages) {
-            isLoading = false;
-            view.setLoadingFooter(isLoading);
-            lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;
-            setHasMorePages(hasMorePages);
-            view.addMoreItems(statuses);
-        }
+    @Override
+    protected void getItems(AuthToken authToken, User targetUser, int pageSize, Status lastItem) {
+        statusService.loadMoreStoryItems(targetUser, PAGE_SIZE, lastItem, new GetStatusesObserver());
     }
 
-    private class GetUserObserver implements UserService.UObserver {
-        @Override
-        public void displayMessage(String message) {
-            view.displayErrorMessage(message);
-        }
-
-        @Override
-        public void handleSuccess(User user) {
-            view.startActivity(user);
-        }
+    @Override
+    protected String getDescription() {
+        return null;
     }
 
 
-
-    public boolean hasMorePages() {
-        return hasMorePages;
-    }
-
-    public void setHasMorePages(boolean hasMorePages) {
-        this.hasMorePages = hasMorePages;
-    }
-
-    public boolean isLoading() {
-        return isLoading;
-    }
 }

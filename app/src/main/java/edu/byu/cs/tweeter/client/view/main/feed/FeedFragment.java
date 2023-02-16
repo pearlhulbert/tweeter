@@ -32,6 +32,7 @@ import java.util.List;
 
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.client.presenter.GetFeedPresenter;
+import edu.byu.cs.tweeter.client.presenter.PagedPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.Status;
 import edu.byu.cs.tweeter.model.domain.User;
@@ -39,7 +40,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the "Feed" tab.
  */
-public class FeedFragment extends Fragment implements GetFeedPresenter.View{
+public class FeedFragment extends Fragment implements PagedPresenter.PageView<Status> {
     private static final String LOG_TAG = "FeedFragment";
     private static final String USER_KEY = "UserKey";
 
@@ -88,7 +89,7 @@ public class FeedFragment extends Fragment implements GetFeedPresenter.View{
         feedRecyclerView.addOnScrollListener(new FeedRecyclerViewPaginationScrollListener(layoutManager));
 
         presenter = new GetFeedPresenter(this);
-        presenter.loadMoreItems(user);
+        presenter.loadMoreItems();
 
         return view;
     }
@@ -103,11 +104,6 @@ public class FeedFragment extends Fragment implements GetFeedPresenter.View{
     }
 
     @Override
-    public void displayErrorMessage(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void addMoreItems(List<Status> statuses) {
         feedRecyclerViewAdapter.addItems(statuses);
     }
@@ -117,6 +113,11 @@ public class FeedFragment extends Fragment implements GetFeedPresenter.View{
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.putExtra(MainActivity.CURRENT_USER_KEY, user);
         startActivity(intent);
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -311,7 +312,7 @@ public class FeedFragment extends Fragment implements GetFeedPresenter.View{
          * data.
          */
         void loadMoreItems() {
-            presenter.loadMoreItems(user);
+            presenter.loadMoreItems();
         }
 
         /**

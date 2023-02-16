@@ -60,18 +60,16 @@ public class FollowService extends Service {
         utils.runTask(getFollowersTask);
     }
 
-    public void unfollowUser(User selectedUser, SimpleObserver observer) {
+    public void unfollowUser(User selectedUser, RelObserver observer) {
         UnfollowTask unfollowTask = new UnfollowTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new SimpleNotificationHandler(observer));
+                selectedUser, new IsFollowerHandler(observer));
         utils.runTask(unfollowTask);
-        observer.handleSuccess();
     }
 
-    public void followUser(User selectedUser, SimpleObserver observer) {
+    public void followUser(User selectedUser, RelObserver observer) {
         BackgroundTask followTask = new FollowTask(Cache.getInstance().getCurrUserAuthToken(),
-                selectedUser, new SimpleNotificationHandler(observer));
+                selectedUser, new IsFollowerHandler(observer));
        utils.runTask(followTask);
-        observer.handleSuccess();
     }
 
     public void getCounts(User selectedUser, CountObserver observer) {

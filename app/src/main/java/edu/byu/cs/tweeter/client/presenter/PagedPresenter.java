@@ -2,6 +2,8 @@ package edu.byu.cs.tweeter.client.presenter;
 
 import android.widget.TextView;
 
+import java.util.List;
+
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.client.presenter.view.View;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
@@ -16,7 +18,7 @@ public abstract class PagedPresenter<T> {
         protected T lastItem;
         protected boolean hasMorePages;
         protected boolean isLoading = false;
-        private PageView<T> view;
+        protected PageView<T> view;
         protected UserService userService;
 
         public PagedPresenter(PageView view) {
@@ -26,7 +28,9 @@ public abstract class PagedPresenter<T> {
 
         public interface PageView<T> extends View {
                 void setLoadingFooter(boolean isLoading);
+                void addMoreItems(List<T> items);
                 void startActivity(User user);
+
         }
 
         public void loadMoreItems() {
