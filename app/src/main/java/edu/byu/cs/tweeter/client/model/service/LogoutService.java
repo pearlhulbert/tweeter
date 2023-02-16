@@ -16,11 +16,6 @@ public class LogoutService {
         void displayFailureMessage(String message);
     }
 
-    public void startLogout(Observer observer) {
-        observer.logoutToast();
-        LogoutTask logoutTask = new LogoutTask(Cache.getInstance().getCurrUserAuthToken(), new LogoutHandler(observer));
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(logoutTask);
-    }
+
 
 }

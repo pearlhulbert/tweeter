@@ -1,9 +1,12 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Message;
 import android.widget.TextView;
 
 import java.util.List;
 
+import edu.byu.cs.tweeter.client.backgroundTask.GetFeedTask;
+import edu.byu.cs.tweeter.client.backgroundTask.PageTasks;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.Status;
@@ -58,7 +61,9 @@ public class GetFeedPresenter {
         }
 
         @Override
-        public void addStatuses(List<Status> statuses, boolean hasMorePages) {
+        public void handleSuccess(List<Status> statuses, boolean hasMorePages, Message msg) {
+            statuses = (List<Status>) msg.getData().getSerializable(PageTasks.ITEMS_KEY);
+            hasMorePages = msg.getData().getBoolean(GetFeedTask.MORE_PAGES_KEY);
             isLoading = false;
             view.setLoadingFooter(isLoading);
             lastStatus = (statuses.size() > 0) ? statuses.get(statuses.size() - 1) : null;

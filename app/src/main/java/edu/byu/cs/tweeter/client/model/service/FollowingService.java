@@ -9,9 +9,6 @@ public class FollowingService {
     public interface Observer {
         void updateSelectedUserFollowingAndFollowers();
         void updateFollowButton(boolean isFollowing);
-        void updateFollowerCount(int count);
-        void displayCountMessage(String s);
-        void updateFolloweeCount(int count);
         void setFollowButton(boolean b);
         void showErrorMessage(String s);
         void showSuccessMessage(String unfollowed_, User selectedUser);

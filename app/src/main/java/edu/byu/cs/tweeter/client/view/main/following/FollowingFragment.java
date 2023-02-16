@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.client.backgroundTask.GetUserTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.presenter.GetFollowersPresenter;
 import edu.byu.cs.tweeter.client.presenter.GetFollowingPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.User;

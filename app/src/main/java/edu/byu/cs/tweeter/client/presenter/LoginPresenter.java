@@ -1,8 +1,10 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Message;
 import android.widget.EditText;
 
 import edu.byu.cs.tweeter.client.model.service.LoginService;
+import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class LoginPresenter {
@@ -19,18 +21,18 @@ public class LoginPresenter {
     }
 
     private View view;
-    private LoginService loginService;
+    private UserService loginService;
 
     public LoginPresenter(View view) {
         this.view = view;
-        loginService = new LoginService();
+        loginService = new UserService();
     }
 
     public void login(EditText alias, EditText password) {
         loginService.login(alias, password, new LoginObserver());
     }
 
-    private class LoginObserver implements LoginService.Observer {
+    private class LoginObserver implements UserService.AuthObserver {
 
         @Override
         public void loginUnsuccessful(String message) {
@@ -40,6 +42,11 @@ public class LoginPresenter {
         @Override
         public void setLoginToast() {
             view.loginToast();
+        }
+
+        @Override
+        public void displaySuccessMessage(String message) {
+
         }
 
         @Override
@@ -63,6 +70,16 @@ public class LoginPresenter {
         @Override
         public void startActivity(User loggedUser) {
             view.startActivity(loggedUser);
+        }
+
+        @Override
+        public void handleSuccess(Message msg) {
+
+        }
+
+        @Override
+        public void displayMessage(String message) {
+
         }
     }
 }

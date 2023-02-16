@@ -18,6 +18,7 @@ import edu.byu.cs.tweeter.client.backgroundTask.handler.GetFollowingCountHandler
 import edu.byu.cs.tweeter.client.backgroundTask.handler.GetFollowingHandler;
 import edu.byu.cs.tweeter.client.backgroundTask.handler.IsFollowerHandler;
 import edu.byu.cs.tweeter.client.backgroundTask.handler.SimpleNotificationHandler;
+import edu.byu.cs.tweeter.client.backgroundTask.observer.CountObserver;
 import edu.byu.cs.tweeter.client.backgroundTask.observer.PageTaskObserver;
 import edu.byu.cs.tweeter.client.backgroundTask.observer.SimpleNotificationObserver;
 import edu.byu.cs.tweeter.client.cache.Cache;
@@ -29,6 +30,11 @@ public class FollowService {
     }
 
     public interface PageObserver extends PageTaskObserver<User> {
+    }
+
+    public interface CountingObserver extends CountObserver {
+        void updateFollowersCount(int count);
+        void updateFolloweeCount(int count);
     }
 
     public void loadMoreFollowingItems(User user, int pageSize, User lastFollowee, PageObserver observer) {
@@ -61,7 +67,7 @@ public class FollowService {
         observer.handleSuccess();
     }
 
-    public void getCounts(User selectedUser, FollowingService.Observer observer) {
+    public void getCounts(User selectedUser, CountObserver observer) {
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
         // Get count of most recently selected user's followers.

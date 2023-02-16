@@ -1,22 +1,27 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import android.os.Message;
+
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.FollowingService;
+import edu.byu.cs.tweeter.client.model.service.LoginService;
 import edu.byu.cs.tweeter.client.model.service.LogoutService;
 import edu.byu.cs.tweeter.client.model.service.PostStatusService;
+import edu.byu.cs.tweeter.client.model.service.StatusService;
+import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class MainPresenter {
     private final View view;
     private FollowService followService;
-    private LogoutService logoutService;
-    private PostStatusService postStatusService;
+    private UserService logoutService;
+    private StatusService postStatusService;
 
     public MainPresenter(View view) {
         this.view = view;
         followService = new FollowService();
-        logoutService = new LogoutService();
-        postStatusService = new PostStatusService();
+        logoutService = new UserService();
+        postStatusService = new StatusService();
     }
 
 //    public void unfollowUser(User selectedUser) {
@@ -40,7 +45,7 @@ public class MainPresenter {
     }
 
     public void getCounts(User selectedUser) {
-        followService.getCounts(selectedUser, new FollowingObserver());
+        followService.getCounts(selectedUser, new CountObserver());
     }
 
     public interface View {
@@ -94,21 +99,6 @@ public class MainPresenter {
         }
 
         @Override
-        public void updateFollowerCount(int count) {
-            view.updateFollowerCount(count);
-        }
-
-        @Override
-        public void displayCountMessage(String s) {
-            view.displayMessage(s);
-        }
-
-        @Override
-        public void updateFolloweeCount(int count) {
-            view.updateFolloweeCount(count);
-        }
-
-        @Override
         public void setFollowButton(boolean b) {
             view.setButton(b);
         }
@@ -119,16 +109,11 @@ public class MainPresenter {
         }
     }
 
-    private class LogoutObserver implements LogoutService.Observer {
+    private class LogoutObserver implements UserService.LogOutObserver {
 
         @Override
         public void logoutToast() {
             view.setLogoutToast();
-        }
-
-        @Override
-        public void cancelLogoutToast() {
-            view.cancelLogoutToast();
         }
 
         @Override
@@ -137,26 +122,59 @@ public class MainPresenter {
         }
 
         @Override
-        public void displayFailureMessage(String message) {
-            view.displayMessage(message);
+        public void handleSuccess() {
+
         }
 
-    }
-
-    private class PostStatusObserver implements PostStatusService.Observer {
         @Override
         public void postToast() {
             view.postToast();
         }
 
         @Override
-        public void cancelPostToast() {
-            view.cancelPostToast();
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+
+    }
+
+    private class PostStatusObserver implements StatusService.SimpleObserver {
+        @Override
+        public void handleSuccess() {
+
         }
 
         @Override
-        public void displayExceptionAndLog(String message, Exception ex) {
-            view.displayExceptionAndLog(message, ex);
+        public void postToast() {
+            view.postToast();
+        }
+
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+    }
+
+    private class CountObserver implements FollowService.CountingObserver {
+       @Override
+        public void updateFollowersCount(int count) {
+            view.updateFollowerCount(count);
+        }
+
+        @Override
+        public void updateFolloweeCount(int count) {
+            view.updateFolloweeCount(count);
+        }
+
+        @Override
+        public void handleSuccess(Message data) {
+
+        }
+
+        @Override
+        public void updateCount(int count) {
+
         }
 
         @Override
