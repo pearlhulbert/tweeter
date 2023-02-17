@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.client.backgroundTask.LoginTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.presenter.AuthenticatePresenter;
 import edu.byu.cs.tweeter.client.presenter.LoginPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
@@ -30,7 +31,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the login screen.
  */
-public class LoginFragment extends Fragment implements LoginPresenter.View {
+public class LoginFragment extends Fragment implements AuthenticatePresenter.AuthView {
     private static final String LOG_TAG = "LoginFragment";
 
     private Toast loginToast;
@@ -72,17 +73,11 @@ public class LoginFragment extends Fragment implements LoginPresenter.View {
         return view;
     }
 
-
     @Override
-    public void loginUnsuccessful(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void loginToast() {
+    public void setToast(String message) {
         errorView.setText(null);
 
-        loginToast = Toast.makeText(getContext(), "Logging In...", Toast.LENGTH_LONG);
+        loginToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         loginToast.show();
     }
 

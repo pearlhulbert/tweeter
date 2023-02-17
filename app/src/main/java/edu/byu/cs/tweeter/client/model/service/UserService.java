@@ -30,16 +30,9 @@ public class UserService extends Service {
 
     private BackgroundTaskUtils utils = createUtils();
 
-    public interface LogObserver extends AuthenticateTaskObserver {
-        void validateLogin(EditText alias, EditText password);
-        void setLoginToast();
-        void loginUnsuccessful(String message);
-    }
-
-    public interface RegObserver extends AuthenticateTaskObserver {
-        void setRegisterToast();
-        void validateRegistration(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload);
-        void registerUnsuccessful(String message);
+    public interface AuthObserver extends AuthenticateTaskObserver {
+        void validate(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload);
+        void setToast();
     }
 
     public interface LogOutObserver extends SimpleNotificationObserver {
@@ -63,10 +56,10 @@ public class UserService extends Service {
         utils.runTask(logoutTask);
     }
 
-    public void login(EditText alias, EditText password, LogObserver observer) {
+    public void login(EditText alias, EditText password, AuthObserver observer) {
         try {
-            observer.validateLogin(alias, password);
-            observer.setLoginToast();
+            observer.validate(null, null, alias, password, null);
+            observer.setToast();
             // Send the login request.
             LoginTask loginTask = new LoginTask(alias.getText().toString(),
                     password.getText().toString(),
@@ -77,11 +70,11 @@ public class UserService extends Service {
         }
     }
 
-    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload, RegObserver observer) {
+    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload, AuthObserver observer) {
         // Register and move to MainActivity.
         try {
-            observer.validateRegistration(firstName, lastName, alias, password, imageToUpload);
-            observer.setRegisterToast();
+            observer.validate(firstName, lastName, alias, password, imageToUpload);
+            observer.setToast();
 
             // Convert image to byte array.
             Bitmap image = ((BitmapDrawable) imageToUpload.getDrawable()).getBitmap();

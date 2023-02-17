@@ -7,80 +7,42 @@ import edu.byu.cs.tweeter.client.model.service.UserService;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
 import edu.byu.cs.tweeter.model.domain.User;
 
-public class RegisterPresenter {
+public class RegisterPresenter extends AuthenticatePresenter {
 
-    public interface View {
-        void registerUnsuccessful(String message);
-        void registerToast();
-        void setErrorView(Exception e);
-        void startActivity(User registeredUser);
-
-        void displayMessage(String message);
+    public RegisterPresenter(AuthView view ) {
+        super(view);
     }
 
-    private View view;
-    private UserService registerService;
-
-    public RegisterPresenter(View view) {
-        this.view = view;
-        registerService = new UserService();
-    }
-
-    public void register(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload) {
-        registerService.register(firstName, lastName, alias, password, imageToUpload, new RegisterObserver());
-    }
-
-    private class RegisterObserver implements UserService.RegObserver {
-
-        @Override
-        public void registerUnsuccessful(String message) {
-            view.registerUnsuccessful(message);
+    @Override
+    protected void validateUser(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload) {
+        if (firstName.getText().length() == 0) {
+            throw new IllegalArgumentException("First Name cannot be empty.");
+        }
+        if (lastName.getText().length() == 0) {
+            throw new IllegalArgumentException("Last Name cannot be empty.");
+        }
+        if (alias.getText().length() == 0) {
+            throw new IllegalArgumentException("Alias cannot be empty.");
+        }
+        if (alias.getText().charAt(0) != '@') {
+            throw new IllegalArgumentException("Alias must begin with @.");
+        }
+        if (alias.getText().length() < 2) {
+            throw new IllegalArgumentException("Alias must contain 1 or more characters after the @.");
+        }
+        if (password.getText().length() == 0) {
+            throw new IllegalArgumentException("Password cannot be empty.");
         }
 
-        @Override
-        public void setRegisterToast() {
-            view.registerToast();
-        }
-
-        @Override
-        public void validateRegistration(EditText firstName, EditText lastName, EditText alias, EditText password, ImageView imageToUpload) {
-            if (firstName.getText().length() == 0) {
-                throw new IllegalArgumentException("First Name cannot be empty.");
-            }
-            if (lastName.getText().length() == 0) {
-                throw new IllegalArgumentException("Last Name cannot be empty.");
-            }
-            if (alias.getText().length() == 0) {
-                throw new IllegalArgumentException("Alias cannot be empty.");
-            }
-            if (alias.getText().charAt(0) != '@') {
-                throw new IllegalArgumentException("Alias must begin with @.");
-            }
-            if (alias.getText().length() < 2) {
-                throw new IllegalArgumentException("Alias must contain 1 or more characters after the @.");
-            }
-            if (password.getText().length() == 0) {
-                throw new IllegalArgumentException("Password cannot be empty.");
-            }
-
-            if (imageToUpload.getDrawable() == null) {
-                throw new IllegalArgumentException("Profile image must be uploaded.");
-            }
-        }
-
-        @Override
-        public void setErrorView(Exception e) {
-            view.setErrorView(e);
-        }
-
-        @Override
-        public void handleSuccess(User currUser, AuthToken authToken) {
-            view.startActivity(currUser);
-        }
-
-        @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
+        if (imageToUpload.getDrawable() == null) {
+            throw new IllegalArgumentException("Profile image must be uploaded.");
         }
     }
+
+    @Override
+    protected String getToast() {
+        return "Registering...";
+    }
+
+
 }

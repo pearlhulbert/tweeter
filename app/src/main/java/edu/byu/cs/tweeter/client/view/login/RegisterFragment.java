@@ -30,6 +30,7 @@ import java.util.concurrent.Executors;
 import edu.byu.cs.tweeter.R;
 import edu.byu.cs.tweeter.client.backgroundTask.RegisterTask;
 import edu.byu.cs.tweeter.client.cache.Cache;
+import edu.byu.cs.tweeter.client.presenter.AuthenticatePresenter;
 import edu.byu.cs.tweeter.client.presenter.RegisterPresenter;
 import edu.byu.cs.tweeter.client.view.main.MainActivity;
 import edu.byu.cs.tweeter.model.domain.AuthToken;
@@ -38,7 +39,7 @@ import edu.byu.cs.tweeter.model.domain.User;
 /**
  * Implements the register screen.
  */
-public class RegisterFragment extends Fragment implements RegisterPresenter.View{
+public class RegisterFragment extends Fragment implements AuthenticatePresenter.AuthView {
     private static final String LOG_TAG = "RegisterFragment";
     private static final int RESULT_IMAGE = 10;
 
@@ -112,14 +113,9 @@ public class RegisterFragment extends Fragment implements RegisterPresenter.View
     }
 
     @Override
-    public void registerUnsuccessful(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void registerToast() {
+    public void setToast(String message) {
         errorView.setText(null);
-        registeringToast = Toast.makeText(getContext(), "Registering...", Toast.LENGTH_LONG);
+        registeringToast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         registeringToast.show();
     }
 
