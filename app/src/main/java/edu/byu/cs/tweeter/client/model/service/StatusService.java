@@ -31,6 +31,7 @@ public class StatusService extends Service {
 
     public interface SimpleObserver extends SimpleNotificationObserver {
 
+        void postToast();
     }
 
     public void loadMoreFeedItems(User user, int pageSize, Status lastStatus, Observer observer) {

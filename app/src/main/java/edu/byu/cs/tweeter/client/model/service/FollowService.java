@@ -43,8 +43,6 @@ public class FollowService extends Service {
 
     public interface RelObserver extends SingleObserver<Boolean> {
         void updateSelectedUserFollowingAndFollowers();
-        void updateFollowButton(boolean isFollowing);
-        void setFollowButton(boolean b);
         void updateFollowRelationship(boolean isFollower);
     }
 

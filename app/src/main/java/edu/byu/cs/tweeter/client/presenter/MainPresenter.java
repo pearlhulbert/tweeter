@@ -3,15 +3,16 @@ package edu.byu.cs.tweeter.client.presenter;
 import edu.byu.cs.tweeter.client.model.service.FollowService;
 import edu.byu.cs.tweeter.client.model.service.StatusService;
 import edu.byu.cs.tweeter.client.model.service.UserService;
+import edu.byu.cs.tweeter.client.presenter.view.View;
 import edu.byu.cs.tweeter.model.domain.User;
 
 public class MainPresenter {
-    private final View view;
+    private MainView view;
     private FollowService followService;
     private UserService logoutService;
     private StatusService postStatusService;
 
-    public MainPresenter(View view) {
+    public MainPresenter(MainView view) {
         this.view = view;
         followService = new FollowService();
         logoutService = new UserService();
@@ -42,7 +43,7 @@ public class MainPresenter {
         followService.getCounts(selectedUser, new CountObserver());
     }
 
-    public interface View {
+    public interface MainView extends View {
         void displayMessage(String message);
 
         void updateSelectedUserFollowingAndFollowers();
@@ -72,16 +73,6 @@ public class MainPresenter {
         }
 
         @Override
-        public void updateFollowButton(boolean isFollowing) {
-            view.updateButton(isFollowing);
-        }
-
-        @Override
-        public void setFollowButton(boolean b) {
-            view.setButton(b);
-        }
-
-        @Override
         public void updateFollowRelationship(boolean isFollowing) {
             view.updateRelationship(isFollowing);
         }
@@ -95,6 +86,7 @@ public class MainPresenter {
         public void handleSuccess(Boolean param) {
             view.updateRelationship(param);
             view.updateButton(param);
+            view.setButton(param);
         }
     }
 
@@ -111,11 +103,6 @@ public class MainPresenter {
         }
 
         @Override
-        public void postToast() {
-            view.postToast();
-        }
-
-        @Override
         public void displayMessage(String message) {
             view.displayMessage(message);
         }
@@ -125,18 +112,17 @@ public class MainPresenter {
     private class PostStatusObserver implements StatusService.SimpleObserver {
         @Override
         public void handleSuccess() {
+            postToast();
+        }
 
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
         }
 
         @Override
         public void postToast() {
             view.postToast();
-        }
-
-
-        @Override
-        public void displayMessage(String message) {
-            view.displayMessage(message);
         }
     }
 
