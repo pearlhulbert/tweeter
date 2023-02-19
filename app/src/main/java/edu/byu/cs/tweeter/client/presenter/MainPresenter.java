@@ -15,8 +15,15 @@ public class MainPresenter {
     public MainPresenter(MainView view) {
         this.view = view;
         followService = new FollowService();
-        logoutService = new UserService();
+        logoutService = getUserService();
         postStatusService = new StatusService();
+    }
+
+    protected UserService getUserService() {
+        if (logoutService == null) {
+            logoutService = new UserService();
+        }
+        return logoutService;
     }
 
     public void unfollowUser(User selectedUser) {
@@ -28,7 +35,7 @@ public class MainPresenter {
     }
 
     public void startLogout() {
-        logoutService.startLogout(new LogoutObserver());
+        getUserService().startLogout(new LogoutObserver());
     }
 
     public void isFollower(User selectedUser) {
