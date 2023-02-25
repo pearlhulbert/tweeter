@@ -26,6 +26,13 @@ public class MainPresenter {
         return logoutService;
     }
 
+    protected StatusService getStatusService() {
+        if (postStatusService == null) {
+            postStatusService = new StatusService();
+        }
+        return postStatusService;
+    }
+
     public void unfollowUser(User selectedUser) {
        followService.unfollowUser(selectedUser, new FollowObserver());
     }
@@ -43,7 +50,7 @@ public class MainPresenter {
     }
 
     public void postStatus(String post) {
-        postStatusService.postStatus(post, new PostStatusObserver());
+        getStatusService().postStatus(post, new PostStatusObserver());
     }
 
     public void getCounts(User selectedUser) {

@@ -9,7 +9,7 @@ import org.mockito.stubbing.Answer;
 import edu.byu.cs.tweeter.client.cache.Cache;
 import edu.byu.cs.tweeter.client.model.service.UserService;
 
-public class MainPresenterUnitTest {
+public class MainPresenterLogOutTest {
 
     private MainPresenter.MainView mockView;
     private UserService mockUserService;
@@ -33,8 +33,12 @@ public class MainPresenterUnitTest {
         Cache.setInstance(mockCache);
     }
 
+    // make functions to get rid of duplicate code
+
     @Test
     public void testLogout_successful() {
+
+        // abstract inner class for answer, replace observer call
         Answer<Void> answer = new Answer<>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
