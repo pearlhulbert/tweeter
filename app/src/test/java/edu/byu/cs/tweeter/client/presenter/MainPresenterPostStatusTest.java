@@ -1,5 +1,6 @@
 package edu.byu.cs.tweeter.client.presenter;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,9 +18,9 @@ public class MainPresenterPostStatusTest {
 
     private MainPresenter mainPresenterSpy;
 
-    private void callPostStatus(Answer answer) {
+    private void callPostStatus(Answer answer, String testString) {
         Mockito.doAnswer(answer).when(mockStatusService).postStatus(Mockito.any(), Mockito.any());
-        mainPresenterSpy.postStatus("test");
+        mainPresenterSpy.postStatus(testString);
     }
 
     @BeforeEach
@@ -39,51 +40,60 @@ public class MainPresenterPostStatusTest {
     @Test
     public void testPostStatus_successful() {
 
+        String testString = "test1";
+
         Answer<Void> answer = new Answer<>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                StatusService.SimpleObserver observer = invocation.getArgument(1);
+                checkParams(invocation, "test1");
+                StatusService.SimpleObserver observer = invocation.getArgument(1, StatusService.SimpleObserver.class);
                 observer.handleSuccess();
                 return null;
             }
         };
 
-       callPostStatus(answer);
+        callPostStatus(answer, testString);
         Mockito.verify(mockView).postToast();
     }
 
     @Test
     public void testPostStatus_unsuccessful() {
+        String testString = "test2";
         Answer<Void> answer = new Answer<>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                StatusService.SimpleObserver observer = invocation.getArgument(1);
+                checkParams(invocation, "test2");
+                StatusService.SimpleObserver observer = invocation.getArgument(1, StatusService.SimpleObserver.class);
                 observer.displayMessage("error");
                 return null;
             }
         };
 
-        callPostStatus(answer);
-
+        callPostStatus(answer, testString);
         Mockito.verify(mockView).displayMessage("error");
     }
 
     @Test
     public void testLogout_withException() {
+        String testString = "test3";
         Answer<Void> answer = new Answer<>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                StatusService.SimpleObserver observer = invocation.getArgument(1);
+                checkParams(invocation, "test3");
+                StatusService.SimpleObserver observer = invocation.getArgument(1, StatusService.SimpleObserver.class);
                 Exception exception = new Exception("exception");
                 observer.displayMessage("exception: " + exception.getMessage());
                 return null;
             }
         };
 
-        callPostStatus(answer);
-
+        callPostStatus(answer, testString);
         Mockito.verify(mockView).displayMessage("exception: exception");
+    }
 
+    private void checkParams(InvocationOnMock invocation, String testString) {
+        String post = invocation.getArgument(0);
+        Assertions.assertEquals(testString, post);
     }
 
 

@@ -119,7 +119,6 @@ public class StatusService extends Service {
             utils.runTask(statusTask);
         } catch (Exception ex) {
             observer.displayMessage("Failed to post the status because of exception: " + ex.getMessage());
-
         }
     }
 

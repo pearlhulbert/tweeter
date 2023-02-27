@@ -34,7 +34,7 @@ public class MainPresenter {
     }
 
     public void unfollowUser(User selectedUser) {
-       followService.unfollowUser(selectedUser, new FollowObserver());
+       followService.unfollowUser(selectedUser, new UnfollowObserver());
     }
 
     public void followUser(User selectedUser) {
@@ -99,8 +99,34 @@ public class MainPresenter {
         @Override
         public void handleSuccess(Boolean param) {
             view.updateRelationship(param);
-            view.updateButton(param);
-            view.setButton(param);
+            view.updateButton(false);
+            view.setButton(true);
+        }
+    }
+
+    // make unfollow observer, duplicate code
+    private class UnfollowObserver implements FollowService.RelObserver {
+
+        @Override
+        public void updateSelectedUserFollowingAndFollowers() {
+            view.updateSelectedUserFollowingAndFollowers();
+        }
+
+        @Override
+        public void updateFollowRelationship(boolean isFollowing) {
+            view.updateRelationship(isFollowing);
+        }
+
+        @Override
+        public void displayMessage(String message) {
+            view.displayMessage(message);
+        }
+
+        @Override
+        public void handleSuccess(Boolean param) {
+            view.updateRelationship(param);
+            view.updateButton(true);
+            view.setButton(true);
         }
     }
 
